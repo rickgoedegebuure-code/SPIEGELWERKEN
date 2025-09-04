@@ -1,5 +1,3 @@
-<!-- Test commit om Pages te forceren -->
-
 <!DOCTYPE html>
 <html lang="nl">
 <head>
@@ -11,11 +9,13 @@
       display: flex;
       justify-content: center;
       align-items: center;
+      flex-direction: column;
       height: 100vh;
       margin: 0;
       background: #f4f4f4;
       font-family: sans-serif;
     }
+
     #flipbook-container {
       width: 90vw;
       max-width: 900px;
@@ -29,19 +29,22 @@
       justify-content: center;
       align-items: center;
     }
+
     #flipbook-container img {
       width: 100%;
       height: 100%;
       object-fit: contain;
-      transition: opacity 0.5s;
       position: absolute;
       top: 0;
       left: 0;
+      transition: opacity 0.5s;
+      opacity: 0;
     }
+
     #controls {
-      margin-top: 10px;
-      text-align: center;
+      margin-top: 15px;
     }
+
     #controls button {
       padding: 10px 20px;
       font-size: 16px;
@@ -52,28 +55,48 @@
 </head>
 <body>
 
-<div>
-  <div id="flipbook-container">
-    <!-- Afbeeldingen worden hier via JavaScript geladen -->
-  </div>
-  <div id="controls">
-    <button id="prev">Vorige</button>
-    <button id="next">Volgende</button>
-  </div>
+<div id="flipbook-container">
+  <!-- Afbeeldingen worden hier geladen via JavaScript -->
+</div>
+
+<div id="controls">
+  <button id="prev">Vorige</button>
+  <button id="next">Volgende</button>
 </div>
 
 <script>
-  const totalPages = 24;
+  const totalPages = 24; // Aantal pagina's
   let currentPage = 1;
   const container = document.getElementById('flipbook-container');
 
+  // Voeg alle afbeeldingen toe
   for (let i = 1; i <= totalPages; i++) {
     const num = i.toString().padStart(2, '0');
     const img = document.createElement('img');
     img.src = `pages/PAGINA-${num}.jpg`;
     img.alt = `Pagina ${i}`;
-    img.style.opacity = i === 1 ? '1' : '0';
+    if (i === 1) img.style.opacity = '1'; // eerste zichtbaar
     container.appendChild(img);
   }
 
-  co
+  const images = container.querySelectorAll('img');
+
+  function showPage(page) {
+    images.forEach((img, index) => {
+      img.style.opacity = (index === page - 1) ? '1' : '0';
+    });
+  }
+
+  document.getElementById('prev').addEventListener('click', () => {
+    if (currentPage > 1) currentPage--;
+    showPage(currentPage);
+  });
+
+  document.getElementById('next').addEventListener('click', () => {
+    if (currentPage < totalPages) currentPage++;
+    showPage(currentPage);
+  });
+</script>
+
+</body>
+</html>
